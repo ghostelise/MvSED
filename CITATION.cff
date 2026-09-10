@@ -1,0 +1,41 @@
+cff-version: 1.2.0
+message: "If you use MvSED, please cite the accompanying manuscript."
+title: "MvSED: Latency-Aware Selective Multi-View Retrieval for Unsupervised Social Event Clustering"
+type: software
+version: 0.1.0
+date-released: 2026-09-10
+authors:
+  - family-names: Li
+    given-names: Kunqing
+  - family-names: Ai
+    given-names: Mengge
+  - family-names: Yan
+    given-names: Ruiteng
+  - family-names: Wen
+    given-names: Ke
+  - family-names: Bao
+    given-names: Enying
+  - family-names: Wang
+    given-names: Lei
+  - family-names: Chen
+    given-names: Xi
+preferred-citation:
+  type: article
+  title: "Latency-Aware Selective Multi-View Retrieval for Unsupervised Social Event Clustering"
+  authors:
+    - family-names: Li
+      given-names: Kunqing
+    - family-names: Ai
+      given-names: Mengge
+    - family-names: Yan
+      given-names: Ruiteng
+    - family-names: Wen
+      given-names: Ke
+    - family-names: Bao
+      given-names: Enying
+    - family-names: Wang
+      given-names: Lei
+    - family-names: Chen
+      given-names: Xi
+  year: 2027
+

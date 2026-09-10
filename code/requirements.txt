@@ -1,0 +1,9 @@
+# Core MvSED runtime. The exact remote LLM and RAGFlow server are configured separately.
+numpy>=1.26.4,<3
+scipy>=1.11,<2
+scikit-learn>=1.6.1,<2
+torch>=2.1
+sentence-transformers>=2.7.0,<4
+tqdm>=4.66
+ragflow-sdk
+

@@ -1,0 +1,35 @@
+.DS_Store
+.idea/
+.vscode/
+
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Credentials and machine-local configuration
+.env
+.env.*
+!.env.example
+
+# Datasets, model artifacts, and experiment outputs
+code/datasets/cache/*.json
+code/datasets/**/*.npy
+code/datasets/**/*.npz
+code/ckpts/
+code/logs/
+code/runs/
+code/cache/
+code/tmp/
+code/*.lock
+*.pkl
+*.pt
+*.pth
+*.safetensors
+
+# Generated reports can contain message-level predictions or model output
+code/results/generated/
+

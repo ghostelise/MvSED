@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="title" content="MvSED — Latency-Aware Selective Multi-View Retrieval for Unsupervised Social Event Clustering">
+  <meta name="description" content="MvSED treats multi-view evidence as a bounded residual correction for faster streaming social event clustering with controlled quality.">
+  <meta name="keywords" content="social event detection, streaming clustering, retrieval-augmented generation, multi-view retrieval, latency, event memory">
+  <meta name="author" content="Kunqing Li, Mengge Ai, Ruiteng Yan, Ke Wen, Enying Bao, Lei Wang, Xi Chen">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#173b63">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="MvSED — Latency-Aware Selective Multi-View Retrieval">
+  <meta property="og:description" content="A bounded residual retrieval path for timely, unsupervised social event clustering.">
+  <title>MvSED | Latency-Aware Selective Multi-View Retrieval</title>
+  <link rel="icon" type="image/svg+xml" href="static/images/favicon.svg">
+  <link rel="stylesheet" href="static/css/index.css">
+  <script defer src="static/js/index.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "Latency-Aware Selective Multi-View Retrieval for Unsupervised Social Event Clustering",
+    "description": "MvSED treats multi-view evidence as a bounded residual correction for faster streaming social event clustering with controlled quality.",
+    "author": [
+      {"@type": "Person", "name": "Kunqing Li"},
+      {"@type": "Person", "name": "Mengge Ai"},
+      {"@type": "Person", "name": "Ruiteng Yan"},
+      {"@type": "Person", "name": "Ke Wen"},
+      {"@type": "Person", "name": "Enying Bao"},
+      {"@type": "Person", "name": "Lei Wang"},
+      {"@type": "Person", "name": "Xi Chen"}
+    ],
+    "affiliation": {"@type": "CollegeOrUniversity", "name": "Southwest Minzu University"},
+    "keywords": ["social event monitoring", "short-text clustering", "retrieval-augmented generation", "multi-view retrieval", "end-to-end latency"],
+    "isAccessibleForFree": true
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <nav class="nav shell" aria-label="Primary navigation">
+      <a class="brand" href="#top" aria-label="MvSED home">
+        <span class="brand-mark">MV</span>
+        <span>MvSED</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+      <div class="nav-links" id="nav-links">
+        <a href="#overview">Overview</a>
+        <a href="#method">Method</a>
+        <a href="#results">Results</a>
+        <a href="#code">Code</a>
+        <a href="#paper">Paper</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="shell hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow"><span></span> Streaming social event clustering</p>
+          <h1>Latency-Aware Selective Multi-View Retrieval for Unsupervised Social Event Clustering</h1>
+          <p class="hero-lead">
+            MvSED fixes candidate membership with text retrieval, invokes auxiliary views only for uncertain decisions,
+            and accepts a repair only when a frozen label-free evidence gate agrees.
+          </p>
+          <div class="authors" aria-label="Authors">
+            <span>Kunqing Li</span><span>Mengge Ai</span><span>Ruiteng Yan</span><span>Ke Wen</span>
+            <span>Enying Bao</span><span>Lei Wang</span><span>Xi Chen</span>
+          </div>
+          <p class="affiliation">Southwest Minzu University · Chengdu, China</p>
+          <div class="hero-actions">
+            <a class="button primary" href="static/pdfs/MvSED.pdf" target="_blank" rel="noopener">Read the manuscript <span aria-hidden="true">↗</span></a>
+            <a class="button secondary" href="code/README.md" data-repository-link target="_blank" rel="noopener">View the code <span aria-hidden="true">↗</span></a>
+            <a class="button text-button" href="#overview">Explore the method <span aria-hidden="true">↓</span></a>
+          </div>
+          <p class="release-note"><span class="status-dot"></span> Source code, fixed-protocol runners, and aggregate paper results are available.</p>
+        </div>
+
+        <aside class="evidence-card" aria-label="Headline results">
+          <div class="evidence-header">
+            <span>Observed paired results</span>
+            <span class="protocol-pill">Fixed-anchor protocol</span>
+          </div>
+          <div class="stat-grid">
+            <div class="stat"><strong>18.7%</strong><span>combined runtime reduction</span></div>
+            <div class="stat"><strong>1.23×</strong><span>combined speed-up</span></div>
+            <div class="stat"><strong>49.0%</strong><span>fewer failed attempts</span></div>
+            <div class="stat"><strong>+0.0567</strong><span>Event2018 mean ARI change</span></div>
+          </div>
+          <div class="latency-strip">
+            <div><span>Event2012</span><strong>11.3% faster</strong></div>
+            <div class="track"><span style="width: 50.7%"></span></div>
+            <div><span>Event2018</span><strong>22.3% faster</strong></div>
+            <div class="track"><span style="width: 100%"></span></div>
+          </div>
+          <p class="micro-note">Quality intervals include zero; results are reported as observed changes, not significance or equivalence claims.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section section-tint" id="overview">
+      <div class="shell">
+        <div class="section-heading split-heading">
+          <div>
+            <p class="kicker">System overview</p>
+            <h2>A short critical path for streaming decisions</h2>
+          </div>
+          <p>
+            Confident assignments bypass auxiliary reasoning. Only uncertain primary outputs enter a bounded residual path,
+            after which the final assignment updates memory for subsequent anchors.
+          </p>
+        </div>
+        <figure class="figure-card overview-figure">
+          <a href="static/images/mvsed-overview.png" target="_blank" rel="noopener" aria-label="Open the MvSED overview figure at full size">
+            <img src="static/images/mvsed-overview.png" alt="MvSED overview: fixed anchors feed a text-only detector; uncertain assignments enter text retrieval, selective MVRA, and an evidence gate before memory is updated." width="2100" height="700">
+          </a>
+          <figcaption>
+            <span><b class="legend blue"></b>Shared streaming path</span>
+            <span><b class="legend purple"></b>Selective residual retrieval</span>
+            <span><b class="legend orange"></b>Frozen repair gate</span>
+            <span><b class="legend green"></b>Committed assignment</span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" id="method">
+      <div class="shell">
+        <div class="section-heading">
+          <p class="kicker">Method</p>
+          <h2>One controlled protocol, three connected stages</h2>
+          <p class="section-intro">The method separates the shared inference unit from the proposed retrieval and repair mechanisms, making every comparison auditable.</p>
+        </div>
+
+        <div class="method-grid">
+          <article class="method-card anchor-card">
+            <div class="method-index">01</div>
+            <div class="method-copy">
+              <p class="method-label">Shared protocol</p>
+              <h3>Fixed single-stage anchors</h3>
+              <p>Messages are embedded and grouped once with a fixed threshold. Representative messages preserve coverage while controlling redundancy.</p>
+              <ul>
+                <li>Identical ordered anchors across paired methods</li>
+                <li>No second-stage anchor reclustering</li>
+                <li>Hash-based audit before a run is admitted</li>
+              </ul>
+            </div>
+            <a class="method-visual" href="static/images/mvsed-anchor.png" target="_blank" rel="noopener">
+              <img src="static/images/mvsed-anchor.png" alt="Fixed single-stage anchor construction and representative selection." loading="lazy" width="1540" height="1185">
+            </a>
+          </article>
+
+          <article class="method-card mvra-card">
+            <div class="method-index">02</div>
+            <div class="method-copy">
+              <p class="method-label">Core retrieval</p>
+              <h3>Text-grounded selective MVRA</h3>
+              <p>Text retrieves the only admissible candidate pool. Entity, relation, and temporal evidence can rerank that pool, but cannot introduce new candidates.</p>
+              <ul>
+                <li>Relevance-minus-redundancy view selection</li>
+                <li>Bounded auxiliary-view budget</li>
+                <li>Text-majority score fusion</li>
+              </ul>
+            </div>
+            <a class="method-visual" href="static/images/mvsed-mvra.png" target="_blank" rel="noopener">
+              <img src="static/images/mvsed-mvra.png" alt="Text-grounded selective multi-view retrieval and reranking." loading="lazy" width="1800" height="1384">
+            </a>
+          </article>
+
+          <article class="method-card repair-card">
+            <div class="method-index">03</div>
+            <div class="method-copy">
+              <p class="method-label">Residual decision</p>
+              <h3>Uncertainty-gated repair</h3>
+              <p>Only Others or Confusion assignments enter repair. A frozen label-free gate changes the result when semantic, structural, confidence, and margin evidence agree.</p>
+              <ul>
+                <li>Confident decisions remain unchanged</li>
+                <li>Temporal evidence cannot justify repair alone</li>
+                <li>Final decisions update dynamic event memory</li>
+              </ul>
+            </div>
+            <a class="method-visual" href="static/images/mvsed-repair.png" target="_blank" rel="noopener">
+              <img src="static/images/mvsed-repair.png" alt="Uncertainty-gated residual repair and dynamic event-memory update." loading="lazy" width="1800" height="1384">
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark" id="results">
+      <div class="shell">
+        <div class="section-heading light-heading split-heading">
+          <div>
+            <p class="kicker">Results</p>
+            <h2>Latency improves on both event streams</h2>
+          </div>
+          <p>Both methods share blocks, encoders, prompts, memory state, ordered anchors, representatives, and the same remotely served LLM endpoint.</p>
+        </div>
+
+        <div class="results-layout">
+          <article class="data-panel wide-panel">
+            <div class="panel-heading">
+              <div><span class="panel-kicker">Efficiency</span><h3>Paired end-to-end measurements</h3></div>
+              <span class="panel-note">R/M: RagSEDE / MvSED</span>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr><th>Dataset</th><th>Runtime R/M</th><th>Reduction</th><th>Speed-up</th><th>Calls R/M</th><th>Failed R/M</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Event2012</td><td>11.15 / 9.89 h</td><td class="good">11.3%</td><td>1.13×</td><td>2702 / 2668</td><td>128 / 71</td></tr>
+                  <tr><td>Event2018</td><td>23.22 / 18.04 h</td><td class="good">22.3%</td><td>1.29×</td><td>4749 / 4468</td><td>123 / 57</td></tr>
+                  <tr class="total-row"><td>Combined</td><td>34.37 / 27.93 h</td><td class="good">18.7%</td><td>1.23×</td><td>7451 / 7136</td><td>251 / 128</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="data-caption">MvSED is faster on 14/15 Event2012 blocks and 16/16 Event2018 blocks. Bootstrap latency-reduction intervals are 6.9–15.8% and 18.3–26.6%.</p>
+          </article>
+
+          <article class="data-panel">
+            <div class="panel-heading">
+              <div><span class="panel-kicker">Quality</span><h3>Mean clustering scores</h3></div>
+            </div>
+            <div class="table-scroll">
+              <table class="compact-table">
+                <thead><tr><th>Dataset</th><th>Method</th><th>NMI</th><th>AMI</th><th>ARI</th></tr></thead>
+                <tbody>
+                  <tr><td rowspan="2">Event2012</td><td>RagSEDE</td><td>0.89637</td><td>0.88610</td><td>0.78386</td></tr>
+                  <tr><td>MvSED</td><td class="best">0.89660</td><td class="best">0.88615</td><td class="best">0.78455</td></tr>
+                  <tr><td rowspan="2">Event2018</td><td>RagSEDE</td><td>0.75418</td><td>0.74012</td><td>0.61094</td></tr>
+                  <tr><td>MvSED</td><td class="best">0.76400</td><td class="best">0.75284</td><td class="best">0.66762</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="data-caption">Event2012 changes remain below 0.001. Event2018 shows favorable observed mean changes of +0.0098 NMI, +0.0127 AMI, and +0.0567 ARI.</p>
+          </article>
+
+          <article class="data-panel tradeoff-panel">
+            <div class="panel-heading">
+              <div><span class="panel-kicker">Interpretation</span><h3>Latency is not token volume</h3></div>
+            </div>
+            <div class="tradeoff-number">−24.5%</div>
+            <p class="tradeoff-label">Event2018 LLM time</p>
+            <p>Event2018 uses 11.9% more tokens, yet completes sooner with fewer calls and 53.7% fewer failed attempts. We therefore claim observed latency reduction—not lower monetary cost, energy, or universal efficiency.</p>
+          </article>
+
+          <article class="data-panel wide-panel">
+            <div class="panel-heading">
+              <div><span class="panel-kicker">Ablation</span><h3>Aligned Event2018 study · M1–M16</h3></div>
+              <span class="panel-note">Same fixed anchors</span>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>Method</th><th>NMI</th><th>AMI</th><th>ARI</th><th>Processing</th><th>Calls</th><th>Failures</th><th>Time reduction</th></tr></thead>
+                <tbody>
+                  <tr><td>RagSEDE</td><td>0.75418</td><td>0.74012</td><td>0.61094</td><td>23.12 h</td><td>4749</td><td>123</td><td>—</td></tr>
+                  <tr><td>MVRA</td><td class="best">0.77229</td><td class="best">0.76044</td><td>0.65022</td><td>20.46 h</td><td>4753</td><td>80</td><td>11.49%</td></tr>
+                  <tr><td>NoTime</td><td>0.75317</td><td>0.74126</td><td>0.63830</td><td class="best">17.06 h</td><td class="best">4467</td><td>63</td><td class="best">26.18%</td></tr>
+                  <tr class="total-row"><td>MvSED</td><td>0.76400</td><td>0.75284</td><td class="best">0.66762</td><td>17.93 h</td><td>4468</td><td class="best">57</td><td>22.45%</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="data-caption">MVRA yields the highest NMI/AMI; NoTime is fastest; the full model yields the highest ARI and the fewest failed attempts while remaining 22.45% faster.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tint" id="code">
+      <div class="shell release-grid">
+        <div class="release-copy">
+          <p class="kicker">Code &amp; reproducibility</p>
+          <h2>Start with an anchor-only protocol check</h2>
+          <p>
+            The release separates free structural validation from paid LLM runs. The Event2018 runner verifies ordered anchor membership and representative-message hashes before it permits a paired experiment.
+          </p>
+          <div class="release-actions">
+            <a class="button primary" href="static/downloads/MvSED-code-release.zip" download>Download source <span aria-hidden="true">↓</span></a>
+            <a class="button secondary" href="code/README.md" data-repository-link target="_blank" rel="noopener">Browse repository <span aria-hidden="true">↗</span></a>
+            <a class="inline-link" href="code/results/paper_summary.csv">Aggregate results</a>
+          </div>
+          <p class="release-boundary">Raw Twitter data, credentials, checkpoints, prompts, responses, and message-level predictions are not distributed.</p>
+        </div>
+
+        <div class="terminal-card" aria-label="Quick-start commands">
+          <div class="terminal-top"><span></span><span></span><span></span><b>anchor-only check · no LLM calls</b></div>
+          <pre><code>cd code
+python3.10 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+bash scripts/anchor_smoke_test.sh</code></pre>
+          <div class="protocol-tags" aria-label="Release safeguards">
+            <span>fixed anchors</span><span>hash audit</span><span>isolated runs</span><span>resumable blocks</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="paper">
+      <div class="shell paper-grid">
+        <article>
+          <p class="kicker">Abstract</p>
+          <h2>Bounded evidence for timely monitoring</h2>
+          <p class="abstract-text">
+            Streaming social event monitoring requires timely event assignments. Existing retrieval-augmented detectors rely on text queries or invoke multiple evidence views unconditionally, causing query drift and long remote-LLM critical paths. We propose MvSED, which treats multi-view evidence as a bounded residual correction. Text retrieval fixes candidate membership, relevance–redundancy selection chooses rerankers, and a frozen label-free gate accepts only consistent repairs of uncertain assignments. On Event2012, MvSED yields mean NMI, AMI, and ARI changes of +0.00023, +0.00005, and +0.00069, while reducing runtime and LLM calls by 11.3% and 1.3%. On Event2018, the corresponding mean changes are +0.0098, +0.0127, and +0.0567, with runtime and calls reduced by 22.3% and 5.9%. Although Event2018 tokens increase by 11.9%, failed attempts fall by 53.7%, exposing a practical latency–token trade-off.
+          </p>
+          <div class="keyword-list" aria-label="Keywords">
+            <span>Social event monitoring</span><span>Short-text clustering</span><span>RAG</span><span>Multi-view retrieval</span><span>End-to-end latency</span>
+          </div>
+        </article>
+
+        <aside class="paper-side">
+          <div class="paper-card">
+            <p class="paper-card-label">Manuscript</p>
+            <h3>Five-page paper with references</h3>
+            <p>Read the current manuscript used to populate this page. Update the PDF here whenever the paper changes.</p>
+            <a class="button primary full-button" href="static/pdfs/MvSED.pdf" target="_blank" rel="noopener">Open MvSED.pdf <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="paper-card caution-card">
+            <p class="paper-card-label">Reporting boundary</p>
+            <h3>What the evidence supports</h3>
+            <p>Remote load makes latency deployment-specific. Quality intervals include zero, and other social platforms remain untested. Labels are used only for development and post-hoc evaluation, never for test-time decisions.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section bib-section" id="citation">
+      <div class="shell">
+        <div class="bib-header">
+          <div><p class="kicker">Citation</p><h2>BibTeX</h2></div>
+          <button class="copy-button" type="button" data-copy-bibtex>Copy BibTeX</button>
+        </div>
+        <pre id="bibtex"><code>@misc{li2027mvsed,
+  title  = {Latency-Aware Selective Multi-View Retrieval for Unsupervised Social Event Clustering},
+  author = {Li, Kunqing and Ai, Mengge and Yan, Ruiteng and Wen, Ke and Bao, Enying and Wang, Lei and Chen, Xi},
+  year   = {2027},
+  note   = {Manuscript}
+}</code></pre>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell footer-inner">
+      <div><strong>MvSED</strong><span>Southwest Minzu University</span></div>
+      <p>Built from the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank" rel="noopener">Academic Project Page Template</a>, adapted from the Nerfies project page.</p>
+    </div>
+  </footer>
+</body>
+</html>
