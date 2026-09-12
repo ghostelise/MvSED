@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "paper_title": "Latency-Aware Selective Multi-View Retrieval for Unsupervised Social Event Clustering",
+  "release_date": "2026-09-12",
+  "source_sha256": {
+    "main.py": "31503097a7aafcb42a111a3a0ed25ee29f44be94179dcf3c6a3dd0e98cac9009",
+    "data_process.py": "f88eda3127f906ea3ee106fcd46bf681d4e3fb9b4f3c40d20b337b64093b78c3"
+  },
+  "datasets": {
+    "Event2012": {
+      "cli_name": "twitter12",
+      "cache_path": "datasets/cache/twitter12.json",
+      "language": "English",
+      "encoder": "all-MiniLM-L6-v2",
+      "anchor_threshold": 0.4,
+      "development_blocks": "M1-M6",
+      "reported_test_blocks": "M7-M21",
+      "quality_seeds": [42, 52, 62],
+      "efficiency_seed": 42
+    },
+    "Event2018": {
+      "cli_name": "twitter18",
+      "cache_path": "datasets/cache/twitter18.json",
+      "language": "French",
+      "encoder": "distiluse-base-multilingual-cased-v1",
+      "anchor_threshold": 0.3,
+      "reported_test_blocks": "M1-M16",
+      "quality_seeds": [42],
+      "efficiency_seed": 42
+    }
+  },
+  "model": {
+    "ragflow_model_name": "deepseek-r1-distill-qwen-32b",
+    "temperature": 0.0,
+    "top_p": 0.3,
+    "max_tokens": 2048,
+    "max_llm_attempts": 30,
+    "retry_delay_seconds": 15.0
+  },
+  "anchors": {
+    "pipeline": "single_stage",
+    "preprocessing": "ragsede",
+    "max_cluster_size": 100,
+    "representatives": 3,
+    "representative_lambda": 0.7,
+    "skip_initial_block": true
+  },
+  "variants": {
+    "RagSEDE": "ragsede_original",
+    "MVRA": "stage_aware_selective_mvra",
+    "NoTime": "stage_aware_selective_gate_no_time",
+    "MvSED": "stage_aware_selective_gate_time_aux"
+  },
+  "reporting": {
+    "quality_metrics": ["NMI", "AMI", "ARI"],
+    "primary_latency_scope": "E2E includes initialization",
+    "ablation_latency_scope": "Proc excludes initialization",
+    "event2012_anchor_verification": "equal blockwise anchor counts; legacy ordered hashes incomplete",
+    "event2018_anchor_verification": "ordered membership and representative-message hashes match",
+    "remote_runtime_warning": "Latency is deployment-dependent because the LLM is remotely served."
+  }
+}

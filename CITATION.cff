@@ -17,6 +17,8 @@ authors:
     given-names: Enying
   - family-names: Wang
     given-names: Lei
+  - family-names: Guo
+    given-names: Yuejin
   - family-names: Chen
     given-names: Xi
 preferred-citation:
@@ -35,7 +37,8 @@ preferred-citation:
       given-names: Enying
     - family-names: Wang
       given-names: Lei
+    - family-names: Guo
+      given-names: Yuejin
     - family-names: Chen
       given-names: Xi
   year: 2027
-

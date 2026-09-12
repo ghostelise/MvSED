@@ -30,6 +30,7 @@ cd "$CODE_ROOT"
   --seed "$SEED" \
   --start_block "$START_BLOCK" \
   --end_block "$END_BLOCK" \
+  --skip_initial_block \
   --llm_model "$LLM_MODEL" \
   --temperature 0.0 \
   --top_p 0.3 \
@@ -41,4 +42,3 @@ cd "$CODE_ROOT"
   --anchor_lambda 0.70 \
   --reuse_embedding_cache \
   --save_audit_log
-

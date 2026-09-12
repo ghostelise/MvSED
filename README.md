@@ -2,7 +2,7 @@
 
 Official project repository for **MvSED: Latency-Aware Selective Multi-View Retrieval for Unsupervised Social Event Clustering**.
 
-[Project page](./index.html) · [Manuscript](./static/pdfs/MvSED.pdf) · [Research code](./code/) · [Reproduction guide](./code/README.md) · [Aggregate results](./code/results/paper_summary.csv)
+[Project page](./index.html) · [Manuscript](./static/pdfs/MvSED.pdf) · [Research code](./code/) · [Reproduction guide](./code/README.md) · [Paper protocol](./code/configs/paper_protocol.json) · [Aggregate results](./code/results/paper_summary.csv)
 
 MvSED treats multi-view retrieval as a bounded residual correction for streaming social event clustering. Text retrieval fixes the admissible candidate set, auxiliary views rerank only uncertain cases, and a frozen label-free gate accepts only supported repairs.
 
@@ -38,6 +38,14 @@ bash scripts/anchor_smoke_test.sh
 ```
 
 The smoke test is anchor-only and does not contact an LLM. Dataset files are not included; see [`code/datasets/README.md`](./code/datasets/README.md).
+
+Before preparing any dataset or model service, validate the downloaded package and its reported aggregates offline:
+
+```bash
+python code/scripts/release_check.py
+```
+
+This is a conditionally reproducible research release: code, fixed protocol, source hashes, aggregate results, and safe runners are included; the original Twitter data, sentence-encoder weights, RAGFlow instance, and remote LLM endpoint must be supplied separately. Remote-service timing is therefore expected to vary by deployment.
 
 ## Preview the project page locally
 

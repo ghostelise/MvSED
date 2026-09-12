@@ -9,7 +9,9 @@ This directory contains the research source released with **MvSED: Latency-Aware
 - `rerun_twitter18.py`: isolated, resumable Event2018 paired protocol.
 - `summarize_efficiency.py`: paired quality, latency, call, failure, token, and resource summaries.
 - `scripts/`: safe paper-protocol wrappers with all non-default parameters explicit.
+- `configs/paper_protocol.json`: machine-readable datasets, blocks, variants, seeds, timing scopes, and audit boundary.
 - `results/paper_summary.csv`: aggregate values shown in the manuscript/project page.
+- `scripts/release_check.py`: dataset-free consistency check for the public package and reported aggregates.
 - `evolution/`: inherited structural-entropy preprocessing utilities retained for provenance.
 - `SOURCE_PROVENANCE.md`: frozen-source hashes and the historical runner boundary.
 
@@ -58,6 +60,12 @@ This check constructs one Event2018 block and writes an audit without contacting
 bash scripts/anchor_smoke_test.sh
 ```
 
+The dataset and local sentence encoder are required for that smoke test. A dataset-free package check is also available:
+
+```bash
+python scripts/release_check.py
+```
+
 ## Event2018 aligned reproduction
 
 Use one unchanged `RUN_NAME`, block range, seed list, and device across all phases. `check` is free and must pass before `run`.
@@ -85,6 +93,8 @@ bash scripts/run_event2012.sh stage_aware_selective_gate_time_aux 42 7 21
 ```
 
 Repeat the quality runs with seeds `52` and `62` when reproducing the paper's three-seed Event2012 quality aggregate. The current manuscript reports paired efficiency from the controlled seed-42 runs.
+
+For the Event2012 ablation, keep the same block range and run `ragsede_original`, `stage_aware_selective_mvra`, `stage_aware_selective_gate_no_time`, and `stage_aware_selective_gate_time_aux` sequentially under unchanged provider conditions. The published aggregate covers M7--M21. Legacy Event2012 artifacts verify equal blockwise anchor counts but do not contain all ordered hashes, so this release does not claim bitwise anchor verification for that panel.
 
 `frozen_final_eval.py` is retained only as provenance for an earlier Event2012 evaluation snapshot. Its checksum guard targets a different historical `main.py`, so it is deliberately **not** the public reproduction entry point for this source release.
 

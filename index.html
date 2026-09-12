@@ -6,7 +6,7 @@
   <meta name="title" content="MvSED — Latency-Aware Selective Multi-View Retrieval for Unsupervised Social Event Clustering">
   <meta name="description" content="MvSED treats multi-view evidence as a bounded residual correction for faster streaming social event clustering with controlled quality.">
   <meta name="keywords" content="social event detection, streaming clustering, retrieval-augmented generation, multi-view retrieval, latency, event memory">
-  <meta name="author" content="Kunqing Li, Mengge Ai, Ruiteng Yan, Ke Wen, Enying Bao, Lei Wang, Xi Chen">
+  <meta name="author" content="Kunqing Li, Mengge Ai, Ruiteng Yan, Ke Wen, Enying Bao, Lei Wang, Yuejin Guo, Xi Chen">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#173b63">
   <meta property="og:type" content="article">
@@ -29,6 +29,7 @@
       {"@type": "Person", "name": "Ke Wen"},
       {"@type": "Person", "name": "Enying Bao"},
       {"@type": "Person", "name": "Lei Wang"},
+      {"@type": "Person", "name": "Yuejin Guo"},
       {"@type": "Person", "name": "Xi Chen"}
     ],
     "affiliation": {"@type": "CollegeOrUniversity", "name": "Southwest Minzu University"},
@@ -69,7 +70,7 @@
           </p>
           <div class="authors" aria-label="Authors">
             <span>Kunqing Li</span><span>Mengge Ai</span><span>Ruiteng Yan</span><span>Ke Wen</span>
-            <span>Enying Bao</span><span>Lei Wang</span><span>Xi Chen</span>
+            <span>Enying Bao</span><span>Lei Wang</span><span>Yuejin Guo</span><span>Xi Chen</span>
           </div>
           <p class="affiliation">Southwest Minzu University · Chengdu, China</p>
           <div class="hero-actions">
@@ -198,7 +199,7 @@
             <p class="kicker">Results</p>
             <h2>Latency improves on both event streams</h2>
           </div>
-          <p>Both methods share blocks, encoders, prompts, memory state, ordered anchors, representatives, and the same remotely served LLM endpoint.</p>
+          <p>Controlled rows share blocks, encoders, prompts, memory protocol, and the same remotely served LLM endpoint. Event2018 additionally passes ordered-anchor hash checks; Event2012 matches blockwise anchor counts.</p>
         </div>
 
         <div class="results-layout">
@@ -251,12 +252,31 @@
 
           <article class="data-panel wide-panel">
             <div class="panel-heading">
+              <div><span class="panel-kicker">Ablation</span><h3>Controlled Event2012 study · M7–M21</h3></div>
+              <span class="panel-note">Equal blockwise anchor counts</span>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>Method</th><th>NMI</th><th>AMI</th><th>ARI</th><th>Proc. h</th><th>Calls</th><th>Failures</th><th>Time reduction</th></tr></thead>
+                <tbody>
+                  <tr><td>RagSEDE</td><td class="best">0.89593</td><td class="best">0.88557</td><td>0.78158</td><td>11.02 h</td><td>2702</td><td>128</td><td>—</td></tr>
+                  <tr><td>MVRA</td><td>0.89470</td><td>0.88428</td><td class="best">0.78443</td><td>10.76 h</td><td>2741</td><td class="best">51</td><td>2.41%</td></tr>
+                  <tr><td>NoTime</td><td>0.89224</td><td>0.88167</td><td>0.77369</td><td>11.65 h</td><td class="best">2641</td><td>70</td><td>−5.73%</td></tr>
+                  <tr class="total-row"><td>MvSED</td><td>0.89306</td><td>0.88199</td><td>0.77432</td><td class="best">9.78 h</td><td>2668</td><td>71</td><td class="best">11.26%</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="data-caption">The full residual path has the lowest processing time. Event2012 quality differences remain small; legacy records verify equal anchor counts but do not contain every ordered hash.</p>
+          </article>
+
+          <article class="data-panel wide-panel">
+            <div class="panel-heading">
               <div><span class="panel-kicker">Ablation</span><h3>Aligned Event2018 study · M1–M16</h3></div>
               <span class="panel-note">Same fixed anchors</span>
             </div>
             <div class="table-scroll">
               <table>
-                <thead><tr><th>Method</th><th>NMI</th><th>AMI</th><th>ARI</th><th>Processing</th><th>Calls</th><th>Failures</th><th>Time reduction</th></tr></thead>
+                <thead><tr><th>Method</th><th>NMI</th><th>AMI</th><th>ARI</th><th>Proc. h</th><th>Calls</th><th>Failures</th><th>Time reduction</th></tr></thead>
                 <tbody>
                   <tr><td>RagSEDE</td><td>0.75418</td><td>0.74012</td><td>0.61094</td><td>23.12 h</td><td>4749</td><td>123</td><td>—</td></tr>
                   <tr><td>MVRA</td><td class="best">0.77229</td><td class="best">0.76044</td><td>0.65022</td><td>20.46 h</td><td>4753</td><td>80</td><td>11.49%</td></tr>
@@ -275,9 +295,9 @@
       <div class="shell release-grid">
         <div class="release-copy">
           <p class="kicker">Code &amp; reproducibility</p>
-          <h2>Start with an anchor-only protocol check</h2>
+          <h2>Start with the offline release check</h2>
           <p>
-            The release separates free structural validation from paid LLM runs. The Event2018 runner verifies ordered anchor membership and representative-message hashes before it permits a paired experiment.
+            The dataset-free check validates source hashes, result metadata, author records, and basic credential hygiene. After placing the datasets, the anchor-only check remains free of LLM calls. Event2018 then verifies ordered anchor membership and representative-message hashes before a paid run.
           </p>
           <div class="release-actions">
             <a class="button primary" href="static/downloads/MvSED-code-release.zip" download>Download source <span aria-hidden="true">↓</span></a>
@@ -288,11 +308,11 @@
         </div>
 
         <div class="terminal-card" aria-label="Quick-start commands">
-          <div class="terminal-top"><span></span><span></span><span></span><b>anchor-only check · no LLM calls</b></div>
+          <div class="terminal-top"><span></span><span></span><span></span><b>offline package check · no dataset or LLM</b></div>
           <pre><code>cd code
-python3.10 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+python scripts/release_check.py
+
+# after dataset placement and installation:
 bash scripts/anchor_smoke_test.sh</code></pre>
           <div class="protocol-tags" aria-label="Release safeguards">
             <span>fixed anchors</span><span>hash audit</span><span>isolated runs</span><span>resumable blocks</span>
@@ -338,7 +358,7 @@ bash scripts/anchor_smoke_test.sh</code></pre>
         </div>
         <pre id="bibtex"><code>@misc{li2027mvsed,
   title  = {Latency-Aware Selective Multi-View Retrieval for Unsupervised Social Event Clustering},
-  author = {Li, Kunqing and Ai, Mengge and Yan, Ruiteng and Wen, Ke and Bao, Enying and Wang, Lei and Chen, Xi},
+  author = {Li, Kunqing and Ai, Mengge and Yan, Ruiteng and Wen, Ke and Bao, Enying and Wang, Lei and Guo, Yuejin and Chen, Xi},
   year   = {2027},
   note   = {Manuscript}
 }</code></pre>
